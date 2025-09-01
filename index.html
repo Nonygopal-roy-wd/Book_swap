@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSwap - Student Book Exchange</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #ea4335;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            padding: 4rem 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .book-img {
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .auth-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            /* existing styles... */
+            
+            /* Smooth transitions for page changes */
+            #mainContent {
+                transition: opacity 0.3s ease;
+            }
+            
+            /* Prevent jumping during loading */
+            .card-img-top {
+                height: 200px;
+                object-fit: contain;
+                background-color: #f8f9fa;
+            }
+            
+            /* Loading animation */
+            .smooth-load {
+                animation: fadeIn 0.5s ease-in;
+            }
+            
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" id="appTitle">BookSwap</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="homeLink">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="browseLink">Browse Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="sellLink">Sell Books</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="authButtons">
+                    <button class="btn btn-outline-primary me-2" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                </div>
+                <div class="d-flex align-items-center d-none" id="userProfile">
+                    <span class="me-2" id="usernameDisplay"></span>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="myBooksLink">My Books</a></li>
+                            <li><a class="dropdown-item" href="#" id="wishlistLink">Wishlist</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav><!-- Main Content Area -->
+    <div class="container-fluid" id="mainContent">
+        <!-- Content will be loaded here dynamically -->
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2023 BookSwap - Student Book Exchange Platform</p>
+            <div class="social-icons">
+                <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer><!-- Authentication Modals -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login to BookSwap</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm">
+                        <div class="mb-3">
+                            <label for="signupName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="signupName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="signupEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signupPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupClass" class="form-label">Class/Grade</label>
+                            <input type="text" class="form-control" id="signupClass">
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupLocation" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="signupLocation">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Book Management Modals -->
+    <div class="modal fade" id="addBookModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Book for Sale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBookForm">
+                        <div class="mb-3">
+                            <label for="bookName" class="form-label">Book Name</label>
+                            <input type="text" class="form-control" id="bookName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="bookSubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookClass" class="form-label">Class/Grade</label>
+                            <input type="text" class="form-control" id="bookClass" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookPrice" class="form-label">Price (৳)</label>
+                            <input type="number" class="form-control" id="bookPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookCondition" class="form-label">Condition</label>
+                            <select class="form-select" id="bookCondition" required>
+                                <option value="New">New</option>
+                                <option value="Like New">Like New</option>
+                                <option value="Good">Good</option>
+                                <option value="Fair">Fair</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="bookDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookImage" class="form-label">Book Image</label>
+                            <input type="file" class="form-control" id="bookImage" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Add Book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="bookDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookDetailTitle">Book Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="" class="img-fluid rounded" id="bookDetailImage" alt="Book Cover">
+                        </div>
+                        <div class="col-md-8">
+                            <h4 id="bookDetailName"></h4>
+                            <p class="text-muted" id="bookDetailSubject"></p>
+                            <p><strong>Price:</strong> <span id="bookDetailPrice"></span></p>
+                            <p><strong>Condition:</strong> <span id="bookDetailCondition"></span></p>
+                            <p><strong>Seller:</strong> <span id="bookDetailSeller"></span></p>
+                            <p><strong>Location:</strong> <span id="bookDetailLocation"></span></p>
+                            <p id="bookDetailDescription"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="contactSellerBtn">Contact Seller</button>
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Modal -->
+    <div class="modal fade" id="chatModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chat with Seller</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="chatMessages" style="height: 300px; overflow-y: auto;">
+                    <!-- Chat messages will appear here -->
+                </div>
+                <div class="modal-footer">
+                    <input type="text" class="form-control" id="chatInput" placeholder="Type your message...">
+                    <button class="btn btn-primary" id="sendMessageBtn">Send</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- Firebase and other JS libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzvrHkMNdksx3OomiGIjNF8Qc3_FiBGOA",
+            authDomain: "ngbroy-66af9.firebaseapp.com",
+            projectId: "ngbroy-66af9",
+            storageBucket: "ngbroy-66af9.appspot.com",
+            messagingSenderId: "686745228755",
+            appId: "1:686745228755:web:3daa5e1b6f9df3c9bfcb26"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        // Current user data
+        let currentUser = null;
+        let currentChat = null;
+        
+        // DOM Elements
+        const mainContent = document.getElementById('mainContent');
+        const authButtons = document.getElementById('authButtons');
+        const userProfile = document.getElementById('userProfile');
+        const usernameDisplay = document.getElementById('usernameDisplay'); // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners for navigation
+            document.getElementById('homeLink').addEventListener('click', () => loadHomePage());
+            document.getElementById('browseLink').addEventListener('click', () => loadBrowsePage());
+            document.getElementById('sellLink').addEventListener('click', () => loadSellPage());
+            document.getElementById('myBooksLink').addEventListener('click', () => loadMyBooksPage());
+            document.getElementById('wishlistLink').addEventListener('click', () => loadWishlistPage());
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Auth related buttons
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            });
+            
+            document.getElementById('signupBtn').addEventListener('click', () => {
+                const signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+                signupModal.show();
+            });
+            
+            // Modal switching
+            document.getElementById('showSignup').addEventListener('click', (e) => {
+                e.preventDefault();
+                const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                loginModal.hide();
+                const signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+                signupModal.show();
+            });
+            
+            document.getElementById('showLogin').addEventListener('click', (e) => {
+                e.preventDefault();
+                const signupModal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
+                signupModal.hide();
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+            });
+            
+            // Form submissions
+            document.getElementById('loginForm').addEventListener('submit', loginUser);
+            document.getElementById('signupForm').addEventListener('submit', signupUser);
+            document.getElementById('addBookForm').addEventListener('submit', addNewBook);
+            
+            // Chat functionality
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            // Check auth state when page loads
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in
+                    currentUser = user;
+                    authButtons.classList.add('d-none');
+                    userProfile.classList.remove('d-none');
+                    usernameDisplay.textContent = user.displayName || user.email;
+                    loadHomePage();
+                } else {
+                    // User is signed out
+                    currentUser = null;
+                    authButtons.classList.remove('d-none');
+                    userProfile.classList.add('d-none');
+                    loadHomePage();
+                }
+            });
+            
+            // Load homepage by default
+            loadHomePage();
+        });
+        //এখানে আমি পরিবর্তন করেছি
+        // Smooth page transitions
+        function smoothLoadContent(htmlContent) {
+            const mainContent = document.getElementById('mainContent');
+            
+            // Fade out current content
+            mainContent.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Replace content
+                mainContent.innerHTML = htmlContent;
+                
+                // Fade in new content
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.classList.add('smooth-load');
+                }, 50);
+            }, 300);
+        }
+        
+        // Modified loadHomePage function example
+        function loadHomePage() {
+            const homeHtml = `
+        <div class="hero-section">
+            <!-- your home page content -->
+        </div>
+    `;
+            
+            smoothLoadContent(homeHtml);
+            
+            // Rest of your home page code...
+        }
+        
+        //এখানে পর্যন্ত
+        
+        
+        
+        
+        
+        
+        
+        
+        // Authentication Functions
+        function loginUser(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    modal.hide();
+                })
+                .catch(error => {
+                    alert('Login failed: ' + error.message);
+                });
+        }
+        
+        function signupUser(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const userClass = document.getElementById('signupClass').value;
+            const location = document.getElementById('signupLocation').value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Add additional user info to Firestore
+                    return db.collection('users').doc(userCredential.user.uid).set({
+                        name: name,
+                        email: email,
+                        class: userClass,
+                        location: location,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    // Update user profile with display name
+                    return auth.currentUser.updateProfile({
+                        displayName: name
+                    });
+                })
+                .then(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
+                    modal.hide();
+                })
+                .catch(error => {
+                    alert('Signup failed: ' + error.message);
+                });
+        }
+        
+        function logout() {
+            auth.signOut().then(() => {
+                loadHomePage();
+            });
+        } // Page Loading Functions
+        function loadHomePage() {
+            mainContent.innerHTML = `
+        <div class="hero-section">
+            <div class="container text-center">
+                <h1 class="display-4">Buy & Sell Used Textbooks</h1>
+                <p class="lead">Connect directly with students in your area to exchange textbooks at fair prices</p>
+                ${currentUser ? `
+                    <div class="mt-4">
+                        <button class="btn btn-light btn-lg me-3" id="browseNowBtn">Browse Books</button>
+                        <button class="btn btn-outline-light btn-lg" id="sellNowBtn">Sell a Book</button>
+                    </div>
+                ` : `
+                    <div class="mt-4">
+                        <button class="btn btn-light btn-lg me-3" id="getStartedBtn">Get Started</button>
+                        <button class="btn btn-outline-light btn-lg" id="learnMoreBtn">Learn More</button>
+                    </div>
+                `}
+            </div>
+        </div>
+        <div class="container my-5">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4>List Your Books</h4>
+                    <p>Upload books you no longer need with photos and details.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Find What You Need</h4>
+                    <p>Browse books by subject, class, or location.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h4>Connect & Exchange</h4>
+                    <p>Message sellers directly to arrange the exchange.</p>
+                </div>
+            </div>
+        </div>
+    `;
+            
+            if (currentUser) {
+                document.getElementById('browseNowBtn').addEventListener('click', loadBrowsePage);
+                document.getElementById('sellNowBtn').addEventListener('click', loadSellPage);
+            } else {
+                document.getElementById('getStartedBtn').addEventListener('click', () => {
+                    const signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+                    signupModal.show();
+                });
+                document.getElementById('learnMoreBtn').addEventListener('click', () => {
+                    alert('BookSwap helps students buy and sell used textbooks directly with each other, saving money and reducing waste.');
+                });
+            }
+        }
+        
+        function loadBrowsePage() {
+            mainContent.innerHTML = `
+        <div class="container my-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Browse Books</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" id="filterBtn">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control" placeholder="Search books..." id="searchInput">
+                        <button class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4 d-none" id="filterPanel">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Books</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="filterClass" class="form-label">Class/Grade</label>
+                            <input type="text" class="form-control" id="filterClass">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="filterSubject">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterMinPrice" class="form-label">Min Price</label>
+                            <input type="number" class="form-control" id="filterMinPrice">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterMaxPrice" class="form-label">Max Price</label>
+                            <input type="number" class="form-control" id="filterMaxPrice">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="filterLocation" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="filterLocation">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterCondition" class="form-label">Condition</label>
+                            <select class="form-select" id="filterCondition">
+                                <option value="">Any</option>
+                                <option value="New">New</option>
+                                <option value="Like New">Like New</option>
+                                <option value="Good">Good</option>
+                                <option value="Fair">Fair</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" id="applyFiltersBtn">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="row" id="booksList">
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+            
+            // Add event listeners
+            document.getElementById('filterBtn').addEventListener('click', () => {
+                const filterPanel = document.getElementById('filterPanel');
+                filterPanel.classList.toggle('d-none');
+            });
+            
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+            document.getElementById('searchBtn').addEventListener('click', searchBooks);
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchBooks();
+            });
+            
+            // Load all books initially
+            loadBooks();
+        }
+        
+        function loadSellPage() {
+            if (!currentUser) {
+                alert('Please login to sell books');
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+                return;
+            }
+            
+            mainContent.innerHTML = `
+        <div class="container my-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Sell Your Books</h2>
+                <button class="btn btn-primary" id="addBookBtn">
+                    <i class="fas fa-plus"></i> Add Book
+                </button>
+            </div>
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> List your used textbooks to sell directly to other students.
+            </div>
+            
+            <div class="row" id="myBooksList">
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+            
+            document.getElementById('addBookBtn').addEventListener('click', () => {
+                const addBookModal = new bootstrap.Modal(document.getElementById('addBookModal'));
+                addBookModal.show();
+            });
+            
+            loadMyBooks();
+        }
+        
+        function loadMyBooksPage() {
+            if (!currentUser) {
+                alert('Please login to view your books');
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+                return;
+            }
+            loadSellPage();
+        }
+        
+        function loadWishlistPage() {
+            if (!currentUser) {
+                alert('Please login to view your wishlist');
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+                return;
+            }
+            
+            mainContent.innerHTML = `
+        <div class="container my-4">
+            <h2 class="mb-4">My Wishlist</h2>
+            <div class="row" id="wishlistItems">
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+            
+            loadWishlist();
+        } // Book Management Functions
+        function loadBooks(filters = {}) {
+            const booksList = document.getElementById('booksList');
+            booksList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"></div><p>Loading available books...</p></div>';
+            
+            console.log("Loading books with filters:", filters);
+            
+            try {
+                // সরল query ব্যবহার করুন - শুধুমাত্র available বই গুলো
+                db.collection('books').where('status', '==', 'available').get()
+                    .then(querySnapshot => {
+                        console.log("Found", querySnapshot.size, "books");
+                        booksList.innerHTML = '';
+                        
+                        if (querySnapshot.empty) {
+                            booksList.innerHTML = '<div class="col-12 text-center"><p>No books available at the moment.</p></div>';
+                            return;
+                        }
+                        
+                        let books = [];
+                        querySnapshot.forEach(doc => {
+                            const bookData = doc.data();
+                            books.push({
+                                id: doc.id,
+                                ...bookData,
+                                // createdAt কে সঠিকভাবে handle করুন
+                                createdAt: bookData.createdAt ? bookData.createdAt.toDate() : new Date()
+                            });
+                        });
+                        
+                        // createdAt অনুসারে sort করুন (নতুন থেকে পুরানো)
+                        books.sort((a, b) => b.createdAt - a.createdAt);
+                        
+                        // Client-side filtering প্রয়োগ করুন
+                        if (filters.class && filters.class.trim() !== '') {
+                            books = books.filter(book => book.class && book.class.toLowerCase().includes(filters.class.toLowerCase()));
+                        }
+                        if (filters.subject && filters.subject.trim() !== '') {
+                            books = books.filter(book => book.subject && book.subject.toLowerCase().includes(filters.subject.toLowerCase()));
+                        }
+                        if (filters.minPrice) {
+                            books = books.filter(book => book.price >= Number(filters.minPrice));
+                        }
+                        if (filters.maxPrice) {
+                            books = books.filter(book => book.price <= Number(filters.maxPrice));
+                        }
+                        if (filters.location && filters.location.trim() !== '') {
+                            books = books.filter(book => book.location && book.location.toLowerCase().includes(filters.location.toLowerCase()));
+                        }
+                        if (filters.condition && filters.condition.trim() !== '') {
+                            books = books.filter(book => book.condition === filters.condition);
+                        }
+                        
+                        if (books.length === 0) {
+                            booksList.innerHTML = '<div class="col-12 text-center"><p>No books found matching your criteria.</p></div>';
+                            return;
+                        }
+                        
+                        // বইগুলি display করুন
+                        displayBooks(books);
+                    })
+                    .catch(error => {
+                        console.error('Error loading books:', error);
+                        booksList.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="text-danger">Unable to load books at the moment.</p>
+                        <button class="btn btn-primary mt-2" onclick="loadBooks()">Try Again</button>
+                    </div>
+                `;
+                    });
+            } catch (error) {
+                console.error('Error in loadBooks:', error);
+                booksList.innerHTML = `
+            <div class="col-12 text-center">
+                <p class="text-danger">Something went wrong. Please refresh the page.</p>
+                <button class="btn btn-primary mt-2" onclick="location.reload()">Refresh Page</button>
+            </div>
+        `;
+            }
+        }
+        
+        function displayBooks(books) {
+            const booksList = document.getElementById('booksList');
+            booksList.innerHTML = '';
+            
+            if (books.length === 0) {
+                booksList.innerHTML = '<div class="col-12 text-center"><p>No books found.</p></div>';
+                return;
+            }
+            
+            books.forEach(book => {
+                const isCurrentUsersBook = currentUser && currentUser.uid === book.sellerId;
+                
+                booksList.innerHTML += `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="position-relative">
+                        <img src="${book.imageUrl || 'https://via.placeholder.com/150'}" 
+                             class="card-img-top book-img" alt="${book.name}" 
+                             onerror="this.src='https://via.placeholder.com/150'">
+                        ${!isCurrentUsersBook && currentUser ? `
+                            <div class="wishlist-btn" data-id="${book.id}">
+                                <i class="far fa-heart text-danger"></i>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${book.name || 'No Name'}</h5>
+                        <p class="card-text">${book.subject || ''} - ${book.class || ''}</p>
+                        <p class="card-text"><strong>৳${book.price || '0'}</strong></p>
+                        <p class="card-text"><small class="text-muted">${book.location || 'Location not specified'}</small></p>
+                        <p class="card-text"><small class="badge bg-${book.condition === 'New' ? 'success' : book.condition === 'Like New' ? 'info' : book.condition === 'Good' ? 'warning' : 'secondary'}">${book.condition || 'Unknown'}</small></p>
+                        <button class="btn btn-primary btn-sm view-book" data-id="${book.id}">View Details</button>
+                        ${isCurrentUsersBook ? `
+                            <button class="btn btn-danger btn-sm ms-2 delete-book" data-id="${book.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+            });
+            
+            // Event listeners যোগ করুন
+            addBookEventListeners();
+        }
+        
+        function addBookEventListeners() {
+            document.querySelectorAll('.view-book').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    showBookDetails(e.target.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.delete-book').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    deleteBook(e.target.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.wishlist-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    toggleWishlist(e.currentTarget.getAttribute('data-id'));
+                });
+            });
+        }
+        
+        function loadMyBooks() {
+            const myBooksList = document.getElementById('myBooksList');
+            myBooksList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"></div><p>Loading your books...</p></div>';
+            
+            db.collection('books')
+                .where('sellerId', '==', currentUser.uid)
+                .get()
+                .then(querySnapshot => {
+                    myBooksList.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        myBooksList.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p>You haven't listed any books yet.</p>
+                        <button class="btn btn-primary" id="addFirstBookBtn">
+                            <i class="fas fa-plus"></i> Add Your First Book
+                        </button>
+                    </div>
+                `;
+                        
+                        document.getElementById('addFirstBookBtn').addEventListener('click', () => {
+                            const addBookModal = new bootstrap.Modal(document.getElementById('addBookModal'));
+                            addBookModal.show();
+                        });
+                        return;
+                    }
+                    
+                    let books = [];
+                    querySnapshot.forEach(doc => {
+                        const bookData = doc.data();
+                        books.push({
+                            id: doc.id,
+                            ...bookData,
+                            createdAt: bookData.createdAt ? bookData.createdAt.toDate() : new Date()
+                        });
+                    });
+                    
+                    // Sort by creation date (newest first)
+                    books.sort((a, b) => b.createdAt - a.createdAt);
+                    
+                    books.forEach(book => {
+                        // সঠিকভাবে status check করুন
+                        const isSold = book.status === 'sold';
+                        
+                        myBooksList.innerHTML += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-img-top position-relative">
+                                <img src="${book.imageUrl || 'https://via.placeholder.com/150'}" 
+                                     class="book-img w-100" alt="${book.name}" 
+                                     onerror="this.src='https://via.placeholder.com/150'">
+                                <span class="position-absolute top-0 end-0 bg-${isSold ? 'secondary' : 'success'} text-white px-2 py-1 rounded">
+                                    ${isSold ? 'Sold' : (book.condition || 'Available')}
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${book.name || 'No Name'}</h5>
+                                <p class="card-text">${book.subject || ''} - ${book.class || ''}</p>
+                                <p class="card-text"><strong>৳${book.price || '0'}</strong></p>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-primary btn-sm edit-book" data-id="${book.id}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-book" data-id="${book.id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    ${!isSold ? `
+                                        <button class="btn btn-success btn-sm mark-sold" data-id="${book.id}">
+                                            <i class="fas fa-check"></i> Sold
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    });
+                    
+                    // Add event listeners
+                    document.querySelectorAll('.edit-book').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            editBook(e.target.getAttribute('data-id'));
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-book').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            deleteBook(e.target.getAttribute('data-id'));
+                        });
+                    });
+                    
+                    document.querySelectorAll('.mark-sold').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            markAsSold(e.target.getAttribute('data-id'));
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading books:', error);
+                    myBooksList.innerHTML = '<div class="col-12 text-center"><p>Error loading your books.</p></div>';
+                });
+        }
+        
+        function addNewBook(e) {
+            e.preventDefault();
+            
+            const bookName = document.getElementById('bookName').value;
+            const bookSubject = document.getElementById('bookSubject').value;
+            const bookClass = document.getElementById('bookClass').value;
+            const bookPrice = document.getElementById('bookPrice').value;
+            const bookCondition = document.getElementById('bookCondition').value;
+            const bookDescription = document.getElementById('bookDescription').value;
+            const bookImage = document.getElementById('bookImage').files[0];
+            
+            if (!bookName || !bookSubject || !bookClass || !bookPrice || !bookCondition) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const addBookModal = bootstrap.Modal.getInstance(document.getElementById('addBookModal'));
+            const addBookBtn = document.querySelector('#addBookForm button[type="submit"]');
+            const originalBtnText = addBookBtn.innerHTML;
+            addBookBtn.disabled = true;
+            addBookBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+            
+            // Upload image if selected
+            const uploadTask = bookImage ?
+                storage.ref(`book_images/${currentUser.uid}/${Date.now()}_${bookImage.name}`).put(bookImage) :
+                Promise.resolve();
+            
+            uploadTask
+                .then(snapshot => {
+                    if (bookImage) {
+                        return snapshot.ref.getDownloadURL();
+                    }
+                    return null;
+                })
+                .then(imageUrl => {
+                    // Add book to Firestore
+                    return db.collection('books').add({
+                        name: bookName,
+                        subject: bookSubject,
+                        class: bookClass,
+                        price: Number(bookPrice),
+                        condition: bookCondition,
+                        description: bookDescription,
+                        imageUrl: imageUrl,
+                        sellerId: currentUser.uid,
+                        sellerName: currentUser.displayName,
+                        location: currentUser.location || 'Unknown',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        status: 'available'
+                    });
+                })
+                .then(() => {
+                    addBookModal.hide();
+                    document.getElementById('addBookForm').reset();
+                    loadSellPage(); // Refresh the books list
+                })
+                .catch(error => {
+                    console.error('Error adding book:', error);
+                    alert('Error adding book: ' + error.message);
+                })
+                .finally(() => {
+                    addBookBtn.disabled = false;
+                    addBookBtn.innerHTML = originalBtnText;
+                });
+        }
+        
+        function editBook(bookId) {
+            // Implementation for editing a book
+            alert('Edit book functionality will be implemented in next steps. Book ID: ' + bookId);
+        }
+        
+        function deleteBook(bookId) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                db.collection('books').doc(bookId).delete()
+                    .then(() => {
+                        loadSellPage(); // Refresh the books list
+                    })
+                    .catch(error => {
+                        console.error('Error deleting book:', error);
+                        alert('Error deleting book');
+                    });
+            }
+        }
+        
+        function markAsSold(bookId) {
+            if (confirm('Mark this book as sold?')) {
+                db.collection('books').doc(bookId).update({
+                        status: 'sold',
+                        soldAt: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    .then(() => {
+                        loadSellPage(); // Refresh the books list
+                    })
+                    .catch(error => {
+                        console.error('Error marking book as sold:', error);
+                        alert('Error marking book as sold');
+                    });
+            }
+        } // Wishlist Functions
+        function loadWishlist() {
+            const wishlistItems = document.getElementById('wishlistItems');
+            wishlistItems.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            
+            if (!currentUser) return;
+            
+            db.collection('wishlists').doc(currentUser.uid).collection('items').get()
+                .then(querySnapshot => {
+                    wishlistItems.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        wishlistItems.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p>Your wishlist is empty.</p>
+                        <button class="btn btn-primary" onclick="loadBrowsePage()">
+                            Browse Books
+                        </button>
+                    </div>
+                `;
+                        return;
+                    }
+                    
+                    // Get all book IDs from wishlist
+                    const bookIds = querySnapshot.docs.map(doc => doc.id);
+                    
+                    if (bookIds.length === 0) {
+                        wishlistItems.innerHTML = '<div class="col-12 text-center"><p>No books in wishlist.</p></div>';
+                        return;
+                    }
+                    
+                    // Get all book details
+                    db.collection('books').where('status', '==', 'available').get()
+                        .then(booksSnapshot => {
+                            let wishlistBooks = [];
+                            booksSnapshot.forEach(doc => {
+                                if (bookIds.includes(doc.id)) {
+                                    const book = doc.data();
+                                    book.id = doc.id;
+                                    wishlistBooks.push(book);
+                                }
+                            });
+                            
+                            if (wishlistBooks.length === 0) {
+                                wishlistItems.innerHTML = '<div class="col-12 text-center"><p>No books found in wishlist.</p></div>';
+                                return;
+                            }
+                            
+                            wishlistBooks.forEach(book => {
+                                wishlistItems.innerHTML += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="${book.imageUrl || 'https://via.placeholder.com/150'}" 
+                                         class="card-img-top book-img" alt="${book.name}" 
+                                         onerror="this.src='https://via.placeholder.com/150'">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${book.name || 'No Name'}</h5>
+                                        <p class="card-text">${book.subject || ''} - ${book.class || ''}</p>
+                                        <p class="card-text"><strong>৳${book.price || '0'}</strong></p>
+                                        <button class="btn btn-primary btn-sm view-book" 
+                                                data-id="${book.id}">
+                                            View Details
+                                        </button>
+                                        <button class="btn btn-danger btn-sm ms-2 remove-wishlist" 
+                                                data-id="${book.id}">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                            });
+                            
+                            // Add event listeners
+                            document.querySelectorAll('.view-book').forEach(button => {
+                                button.addEventListener('click', (e) => {
+                                    showBookDetails(e.target.getAttribute('data-id'));
+                                });
+                            });
+                            
+                            document.querySelectorAll('.remove-wishlist').forEach(button => {
+                                button.addEventListener('click', (e) => {
+                                    removeFromWishlist(e.target.getAttribute('data-id'));
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error loading wishlist books:', error);
+                            wishlistItems.innerHTML = '<div class="col-12 text-center"><p>Error loading wishlist.</p></div>';
+                        });
+                })
+                .catch(error => {
+                    console.error('Error loading wishlist:', error);
+                    wishlistItems.innerHTML = '<div class="col-12 text-center"><p>Error loading wishlist.</p></div>';
+                });
+        }
+        
+        function toggleWishlist(bookId) {
+            if (!currentUser) {
+                alert('Please login to add to wishlist');
+                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+                return;
+            }
+            
+            const wishlistRef = db.collection('wishlists').doc(currentUser.uid).collection('items').doc(bookId);
+            
+            wishlistRef.get()
+                .then(doc => {
+                    if (doc.exists) {
+                        // Remove from wishlist
+                        return wishlistRef.delete();
+                    } else {
+                        // Add to wishlist
+                        return wishlistRef.set({
+                            bookId: bookId,
+                            addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                })
+                .then(() => {
+                    loadBooks(); // Refresh the books list
+                })
+                .catch(error => {
+                    console.error('Error toggling wishlist:', error);
+                    alert('Error updating wishlist');
+                });
+        }
+        
+        function removeFromWishlist(bookId) {
+            if (confirm('Remove this book from your wishlist?')) {
+                db.collection('wishlists').doc(currentUser.uid).collection('items').doc(bookId).delete()
+                    .then(() => {
+                        loadWishlist(); // Refresh the wishlist
+                    })
+                    .catch(error => {
+                        console.error('Error removing from wishlist:', error);
+                        alert('Error removing from wishlist');
+                    });
+            }
+        }
+        
+        // Chat Functions
+        function showBookDetails(bookId) {
+            db.collection('books').doc(bookId).get()
+                .then(doc => {
+                    if (!doc.exists) {
+                        alert('Book not found');
+                        return;
+                    }
+                    
+                    const book = doc.data();
+                    
+                    // Update modal with book details
+                    document.getElementById('bookDetailTitle').textContent = book.name || 'Book Details';
+                    document.getElementById('bookDetailName').textContent = book.name || 'No Name';
+                    document.getElementById('bookDetailSubject').textContent = `${book.subject || ''} - ${book.class || ''}`;
+                    document.getElementById('bookDetailPrice').textContent = `৳${book.price || '0'}`;
+                    document.getElementById('bookDetailCondition').textContent = book.condition || 'Not specified';
+                    document.getElementById('bookDetailSeller').textContent = book.sellerName || 'Unknown';
+                    document.getElementById('bookDetailLocation').textContent = book.location || 'Not specified';
+                    document.getElementById('bookDetailDescription').textContent = book.description || 'No description provided.';
+                    
+                    const bookImage = document.getElementById('bookDetailImage');
+                    if (book.imageUrl) {
+                        bookImage.src = book.imageUrl;
+                    } else {
+                        bookImage.src = 'https://via.placeholder.com/300x400';
+                    }
+                    bookImage.onerror = function() {
+                        this.src = 'https://via.placeholder.com/300x400';
+                    };
+                    
+                    // Set up contact button
+                    const contactBtn = document.getElementById('contactSellerBtn');
+                    if (currentUser && currentUser.uid === book.sellerId) {
+                        contactBtn.style.display = 'none';
+                    } else {
+                        contactBtn.style.display = 'block';
+                        contactBtn.onclick = function() {
+                            if (!currentUser) {
+                                alert('Please login to contact seller');
+                                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                                loginModal.show();
+                                return;
+                            }
+                            
+                            currentChat = {
+                                bookId: bookId,
+                                sellerId: book.sellerId,
+                                buyerId: currentUser.uid,
+                                bookName: book.name
+                            };
+                            
+                            openChat();
+                        };
+                    }
+                    
+                    // Show modal
+                    const bookDetailsModal = new bootstrap.Modal(document.getElementById('bookDetailsModal'));
+                    bookDetailsModal.show();
+                })
+                .catch(error => {
+                    console.error('Error loading book details:', error);
+                    alert('Error loading book details');
+                });
+        }
+        
+        function openChat() {
+            const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+            document.getElementById('chatMessages').innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p>Loading messages...</p></div>';
+            
+            // Set chat title
+            document.querySelector('#chatModal .modal-title').textContent = `Chat - ${currentChat.bookName || 'Book'}`;
+            
+            modal.show();
+            
+            // Load chat messages
+            loadChatMessages();
+        }
+        
+        function loadChatMessages() {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            if (!currentChat) {
+                console.error("No current chat available");
+                chatMessages.innerHTML = '<div class="text-muted text-center">No active chat session</div>';
+                return;
+            }
+            
+            console.log("Loading messages for chat:", currentChat);
+            chatMessages.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm"></div> Loading messages...</div>';
+            
+            // Chat title আপডেট করুন
+            document.querySelector('#chatModal .modal-title').textContent =
+                `Chat with ${currentChat.sellerName || 'Seller'} - ${currentChat.bookName || 'Book'}`;
+            
+            // Firestore থেকে messages লোড করুন
+            db.collection('chats')
+                .where('bookId', '==', currentChat.bookId)
+                .where('participants', 'array-contains', currentUser.uid)
+                .orderBy('timestamp', 'asc')
+                .get()
+                .then(snapshot => {
+                    chatMessages.innerHTML = '';
+                    
+                    if (snapshot.empty) {
+                        chatMessages.innerHTML = `
+                    <div class="text-muted text-center p-3">
+                        <i class="fas fa-comments fa-2x mb-2"></i>
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                `;
+                        return;
+                    }
+                    
+                    snapshot.forEach(doc => {
+                        const message = doc.data();
+                        addMessageToChat(message, chatMessages);
+                    });
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                    chatMessages.innerHTML = `
+                <div class="text-danger text-center p-3">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Error loading messages</p>
+                    <button class="btn btn-sm btn-outline-primary" onclick="loadChatMessages()">Retry</button>
+                </div>
+            `;
+                });
+        }
+        
+        function addMessageToChat(message, chatMessages) {
+            const isCurrentUser = message.senderId === currentUser.uid;
+            const messageTime = message.timestamp ? new Date(message.timestamp.toDate()).toLocaleTimeString() : 'Just now';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `mb-2 ${isCurrentUser ? 'text-end' : 'text-start'}`;
+            
+            messageDiv.innerHTML = `
+        <div class="d-inline-block max-w-75">
+            <div class="rounded p-2 ${isCurrentUser ? 'bg-primary text-white' : 'bg-light'}">
+                <div class="message-content">${message.content}</div>
+                <div class="message-time ${isCurrentUser ? 'text-white-50' : 'text-muted'}">
+                    <small>${messageTime}</small>
+                </div>
+            </div>
+        </div>
+    `;
+            
+            chatMessages.appendChild(messageDiv);
+        }
+        
+        function sendMessage() {
+            const messageInput = document.getElementById('chatInput');
+            const content = messageInput.value.trim();
+            
+            if (!content || !currentChat) return;
+            
+            db.collection('chats').add({
+                    bookId: currentChat.bookId,
+                    senderId: currentUser.uid,
+                    content: content,
+                    participants: [currentChat.sellerId, currentUser.uid],
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    messageInput.value = '';
+                    loadChatMessages(); // Reload messages
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    alert('Error sending message');
+                });
+            
+        } // Utility Functions
+        function applyFilters() {
+            const filters = {
+                class: document.getElementById('filterClass').value,
+                subject: document.getElementById('filterSubject').value,
+                minPrice: document.getElementById('filterMinPrice').value,
+                maxPrice: document.getElementById('filterMaxPrice').value,
+                location: document.getElementById('filterLocation').value,
+                condition: document.getElementById('filterCondition').value
+            };
+            
+            console.log("Applying filters:", filters);
+            
+            // লোডিং মেসেজ দেখান
+            const booksList = document.getElementById('booksList');
+            booksList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"></div><p>Applying filters...</p></div>';
+            
+            // ফিল্টার প্রয়োগ করুন
+            loadBooks(filters);
+        }
+        
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                loadBooks();
+                return;
+            }
+            
+            // Client-side search implementation
+            db.collection('books').where('status', '==', 'available').get()
+                .then(querySnapshot => {
+                    const booksList = document.getElementById('booksList');
+                    booksList.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        booksList.innerHTML = '<div class="col-12 text-center"><p>No books found.</p></div>';
+                        return;
+                    }
+                    
+                    let books = [];
+                    querySnapshot.forEach(doc => {
+                        const book = doc.data();
+                        book.id = doc.id;
+                        
+                        // Search in multiple fields
+                        if (book.name && book.name.toLowerCase().includes(searchTerm) ||
+                            book.subject && book.subject.toLowerCase().includes(searchTerm) ||
+                            book.class && book.class.toLowerCase().includes(searchTerm) ||
+                            book.description && book.description.toLowerCase().includes(searchTerm)) {
+                            books.push(book);
+                        }
+                    });
+                    
+                    if (books.length === 0) {
+                        booksList.innerHTML = '<div class="col-12 text-center"><p>No books found matching your search.</p></div>';
+                        return;
+                    }
+                    
+                    // Display search results
+                    displayBooks(books);
+                })
+                .catch(error => {
+                    console.error('Error searching books:', error);
+                    const booksList = document.getElementById('booksList');
+                    booksList.innerHTML = '<div class="col-12 text-center"><p>Error searching books.</p></div>';
+                });
+        }
+        
+        // Event delegation for dynamic elements
+        document.addEventListener('click', function(e) {
+            // View book details
+            if (e.target.classList.contains('view-book')) {
+                showBookDetails(e.target.dataset.id);
+            }
+            
+            // Delete book
+            if (e.target.classList.contains('delete-book')) {
+                deleteBook(e.target.dataset.id);
+            }
+            
+            // Wishlist button
+            if (e.target.closest('.wishlist-btn')) {
+                const wishlistBtn = e.target.closest('.wishlist-btn');
+                toggleWishlist(wishlistBtn.dataset.id);
+            }
+            
+            // Remove from wishlist
+            if (e.target.classList.contains('remove-wishlist')) {
+                removeFromWishlist(e.target.dataset.id);
+            }
+            
+            // Mark as sold
+            if (e.target.classList.contains('mark-sold')) {
+                markAsSold(e.target.dataset.id);
+            }
+        });
+    </script>
+</body>
+
+</html>
